@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="qrcode.js : Cross-browser QRCode generator for javascript" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>qrcode.js</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/davidshimjs/qrcodejs">View on GitHub</a>
+
+          <h1 id="project_title">qrcode.js</h1>
+          <h2 id="project_tagline">Cross-browser QRCode generator for javascript</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/davidshimjs/qrcodejs/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/davidshimjs/qrcodejs/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>QRCode.js</h1>
+
+<p>QRCode.js is javascript library for making QRCode. QRCode.js supports Cross-browser with HTML5 Canvas and table tag in DOM.
+QRCode.js has no dependencies.</p>
+
+<h2>Basic Usages</h2>
+
+<pre><code>&lt;div id="qrcode"&gt;&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+new QRCode(document.getElementById("qrcode"), "http://jindo.dev.naver.com/collie");
+&lt;/script&gt;
+</code></pre>
+
+<p>or with some options</p>
+
+<pre><code>var qrcode = new QRCode("test", {
+    text: "http://jindo.dev.naver.com/collie",
+    width: 128,
+    height: 128,
+    colorDark : "#000000",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.H
+});
+</code></pre>
+
+<p>and you can use some methods</p>
+
+<pre><code>qrcode.clear(); // clear the code.
+qrcode.makeCode("http://naver.com"); // make another code.
+</code></pre>
+
+<h2>License</h2>
+
+<p>MIT License</p>
+
+<h2>Contact</h2>
+
+<p>twitter <a href="https://github.com/davidshimjs" class="user-mention">@davidshimjs</a></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">qrcode.js maintained by <a href="https://github.com/davidshimjs">davidshimjs</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
