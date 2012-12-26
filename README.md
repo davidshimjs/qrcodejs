@@ -19,7 +19,7 @@ var qrcode = new QRCode("test", {
 	height: 128,
 	colorDark : "#000000",
 	colorLight : "#ffffff",
-	correctLevel : QRErrorCorrectLevel.H
+	correctLevel : QRCode.CorrectLevel.H
 });
 ```
 
