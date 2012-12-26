@@ -2,7 +2,7 @@
 QRCode.js is javascript library for making QRCode. QRCode.js supports Cross-browser with HTML5 Canvas and table tag in DOM.
 QRCode.js has no dependencies.
 
-# Basic Usages
+## Basic Usages
 ```
 <div id="qrcode"></div>
 <script type="text/javascript">
@@ -30,8 +30,8 @@ qrcode.clear(); // clear the code.
 qrcode.makeCode("http://naver.com"); // make another code.
 ```
 
-#License
+## License
 MIT License
 
-#Contact
+## Contact
 twitter @davidshimjs
