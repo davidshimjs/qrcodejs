@@ -30,6 +30,9 @@ qrcode.clear(); // clear the code.
 qrcode.makeCode("http://naver.com"); // make another code.
 ```
 
+## Browser Compatibility
+IE6~10, Chrome, Firefox, Safari, Opera, Mobile Safari, Android, Windows Mobile, ETC.
+
 ## License
 MIT License
 
