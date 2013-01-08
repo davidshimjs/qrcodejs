@@ -99,6 +99,23 @@ var QRCode;
 		return typeof CanvasRenderingContext2D != "undefined";
 	}
 	
+	// android 2.x doesn't support Data-URI spec
+	function _getAndroid() {
+		var android = false;
+		var sAgent = navigator.userAgent;
+		
+		if (/android/i.test(sAgent)) { // android
+			android = true;
+			aMat = sAgent.toString().match(/android ([0-9]\.[0-9])/i);
+			
+			if (aMat && aMat[1]) {
+				android = parseFloat(aMat[1]);
+			}
+		}
+		
+		return android;
+	}
+	
 	// Drawing in DOM by using Table tag
 	var Drawing = !_isSupportCanvas() ? (function () {
 		var _el = null;
@@ -161,11 +178,33 @@ var QRCode;
 		var _bSupportDataURI = null;
 		var _oContext = null;
 		var _bIsPainted = false;
+		var _android = _getAndroid();
 		
 		function _onMakeImage() {
 			_elImage.src = _elCanvas.toDataURL("image/png");
 			_elImage.style.display = "block";
 			_elCanvas.style.display = "none";			
+		}
+		
+		// Android 2.1 bug workaround
+		// http://code.google.com/p/android/issues/detail?id=5141
+		if (_android && _android <= 2.1) {
+	    	var factor = 1 / window.devicePixelRatio;
+	        var drawImage = CanvasRenderingContext2D.prototype.drawImage; 
+	    	CanvasRenderingContext2D.prototype.drawImage = function (image, sx, sy, sw, sh, dx, dy, dw, dh) {
+	    		if (("nodeName" in image) && /img/i.test(image.nodeName)) {
+		        	for (var i = arguments.length - 1; i >= 1; i--) {
+		            	arguments[i] = arguments[i] * factor;
+		        	}
+	    		} else if (typeof dw == "undefined") {
+	    			arguments[1] *= factor;
+	    			arguments[2] *= factor;
+	    			arguments[3] *= factor;
+	    			arguments[4] *= factor;
+	    		}
+	    		
+	        	drawImage.apply(this, arguments); 
+	    	};
 		}
 		
 		/**
@@ -409,8 +448,9 @@ var QRCode;
 		
 		if (typeof el == "string") {
 			el = document.getElementById(el);
-		}	
+		}
 		
+		this._android = _getAndroid();
 		this._el = el;
 		this._oQRCode = null;
 		this._oDrawing = new Drawing(this._el, this._htOption);
@@ -437,11 +477,12 @@ var QRCode;
 	/**
 	 * Make the Image from Canvas element
 	 * - It occurs automatically
+	 * - Android below 3 doesn't support Data-URI spec.
 	 * 
 	 * @private
 	 */
 	QRCode.prototype.makeImage = function () {
-		if (typeof this._oDrawing.makeImage == "function") {
+		if (typeof this._oDrawing.makeImage == "function" && (!this._android || this._android >= 3)) {
 			this._oDrawing.makeImage();
 		}
 	};
