@@ -203,37 +203,38 @@ var QRCode;
 		 * @param {Function} fFail Occurs if it doesn't support Data URI
 		 */
 		function _safeSetDataURI(fSuccess, fFail) {
-			this._fFail = fFail;
-			this._fSuccess = fSuccess;
-	
-			// Check it just once
-			if (this._bSupportDataURI === null) {
-				var el = document.createElement("img");
-				var fOnError = function () {
-					this._bSupportDataURI = false;
-					
-					if (this._fFail) {
-						_fFail.call(this);	
-					}					
-				};
-				var fOnSuccess = function () {
-					this._bSupportDataURI = true;
-					
-					if (this._fSuccess) {
-						_fSuccess.call(this);
-					}
-				};
-				
-				el.onabort = fOnError;
-				el.onerror = fOnError;
-				el.onload = fOnSuccess;
-				el.src = "data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="; // the Image contains 1px data.
-				return;
-			} else if (this._bSupportDataURI === true && this._fSuccess) {
-				_fSuccess.call(this);
-			} else if (this._bSupportDataURI === false && this._fFail) {
-				_fFail.call(this);
-			}
+            var self = this;
+            self._fFail = fFail;
+            self._fSuccess = fSuccess;
+
+            // Check it just once
+            if (self._bSupportDataURI === null) {
+                var el = document.createElement("img");
+                var fOnError = function() {
+                    self._bSupportDataURI = false;
+
+                    if (self._fFail) {
+                        _fFail.call(self);
+                    }
+                };
+                var fOnSuccess = function() {
+                    self._bSupportDataURI = true;
+
+                    if (self._fSuccess) {
+                        self._fSuccess.call(self);
+                    }
+                };
+
+                el.onabort = fOnError;
+                el.onerror = fOnError;
+                el.onload = fOnSuccess;
+                el.src = "data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="; // the Image contains 1px data.
+                return;
+            } else if (self._bSupportDataURI === true && self._fSuccess) {
+                self._fSuccess.call(self);
+            } else if (self._bSupportDataURI === false && self._fFail) {
+                self._fFail.call(self);
+            }
 		};
 		
 		/**
