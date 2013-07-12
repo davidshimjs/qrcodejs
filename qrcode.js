@@ -26,8 +26,62 @@ var QRCode;
 	//   http://www.denso-wave.com/qrcode/faqpatent-e.html
 	//
 	//---------------------------------------------------------------------
-	function QR8bitByte(data){this.mode=QRMode.MODE_8BIT_BYTE;this.data=data;}
-	QR8bitByte.prototype={getLength:function(buffer){return this.data.length;},write:function(buffer){for(var i=0;i<this.data.length;i++){buffer.put(this.data.charCodeAt(i),8);}}};function QRCodeModel(typeNumber,errorCorrectLevel){this.typeNumber=typeNumber;this.errorCorrectLevel=errorCorrectLevel;this.modules=null;this.moduleCount=0;this.dataCache=null;this.dataList=[];}
+	function QR8bitByte(data) {
+		this.mode = QRMode.MODE_8BIT_BYTE;
+		this.data = data;
+		this.parsedData = [];
+		var byteArray = [];
+
+		// Added to support UTF-8 Characters
+		for (var i = 0, l = this.data.length; i < l; i++) {
+			var code = this.data.charCodeAt(i);
+
+			if (code > 0x10000) {
+				byteArray[0] = 0xF0 | ((code & 0x1C0000) >>> 18);
+				byteArray[1] = 0x80 | ((code & 0x3F000) >>> 12);
+				byteArray[2] = 0x80 | ((code & 0xFC0) >>> 6);
+				byteArray[3] = 0x80 | (code & 0x3F);
+			} else if (code > 0x800) {
+				byteArray[0] = 0xE0 | ((code & 0xF000) >>> 12);
+				byteArray[1] = 0x80 | ((code & 0xFC0) >>> 6);
+				byteArray[2] = 0x80 | (code & 0x3F);
+			} else if (code > 0x80) {
+				byteArray[0] = 0xC0 | ((code & 0x7C0) >>> 6);
+				byteArray[1] = 0x80 | (code & 0x3F);
+			} else {
+				byteArray[0] = code;
+			}
+
+			this.parsedData = this.parsedData.concat(byteArray);
+		}
+
+		if (this.parsedData.length != this.data.length) {
+			this.parsedData.unshift(191);
+			this.parsedData.unshift(187);
+			this.parsedData.unshift(239);
+		}
+	}
+
+	QR8bitByte.prototype = {
+		getLength: function (buffer) {
+			return this.parsedData.length;
+		},
+		write: function (buffer) {
+			for (var i = 0, l = this.parsedData.length; i < l; i++) {
+				buffer.put(this.parsedData[i], 8);
+			}
+		}
+	};
+
+	function QRCodeModel(typeNumber, errorCorrectLevel) {
+		this.typeNumber = typeNumber;
+		this.errorCorrectLevel = errorCorrectLevel;
+		this.modules = null;
+		this.moduleCount = 0;
+		this.dataCache = null;
+		this.dataList = [];
+	}
+
 	QRCodeModel.prototype={addData:function(data){var newData=new QR8bitByte(data);this.dataList.push(newData);this.dataCache=null;},isDark:function(row,col){if(row<0||this.moduleCount<=row||col<0||this.moduleCount<=col){throw new Error(row+","+col);}
 	return this.modules[row][col];},getModuleCount:function(){return this.moduleCount;},make:function(){this.makeImpl(false,this.getBestMaskPattern());},makeImpl:function(test,maskPattern){this.moduleCount=this.typeNumber*4+17;this.modules=new Array(this.moduleCount);for(var row=0;row<this.moduleCount;row++){this.modules[row]=new Array(this.moduleCount);for(var col=0;col<this.moduleCount;col++){this.modules[row][col]=null;}}
 	this.setupPositionProbePattern(0,0);this.setupPositionProbePattern(this.moduleCount-7,0);this.setupPositionProbePattern(0,this.moduleCount-7);this.setupPositionAdjustPattern();this.setupTimingPattern();this.setupTypeInfo(test,maskPattern);if(this.typeNumber>=7){this.setupTypeNumber(test);}
@@ -410,6 +464,7 @@ var QRCode;
 	 */
 	function _getTypeNumber(sText, nCorrectLevel) {			
 		var nType = 1;
+		var length = _getUTF8Length(sText);
 		
 		for (var i = 0, len = QRCodeLimitLength.length; i <= len; i++) {
 			var nLimit = 0;
@@ -429,7 +484,7 @@ var QRCode;
 					break;
 			}
 			
-			if (sText.length <= nLimit) {
+			if (length <= nLimit) {
 				break;
 			} else {
 				nType++;
@@ -441,6 +496,11 @@ var QRCode;
 		}
 		
 		return nType;
+	}
+
+	function _getUTF8Length(sText) {
+		var replacedText = encodeURI(sText).toString().replace(/\%[0-9a-fA-F]{2}/g, 'a');
+		return replacedText.length + (replacedText.length != sText ? 3 : 0);
 	}
 	
 	/**
