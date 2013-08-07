@@ -30,10 +30,10 @@ var QRCode;
 		this.mode = QRMode.MODE_8BIT_BYTE;
 		this.data = data;
 		this.parsedData = [];
-		var byteArray = [];
 
 		// Added to support UTF-8 Characters
 		for (var i = 0, l = this.data.length; i < l; i++) {
+			var byteArray = [];
 			var code = this.data.charCodeAt(i);
 
 			if (code > 0x10000) {
@@ -52,8 +52,10 @@ var QRCode;
 				byteArray[0] = code;
 			}
 
-			this.parsedData = this.parsedData.concat(byteArray);
+			this.parsedData.push(byteArray);
 		}
+
+		this.parsedData = Array.prototype.concat.apply([], this.parsedData);
 
 		if (this.parsedData.length != this.data.length) {
 			this.parsedData.unshift(191);
