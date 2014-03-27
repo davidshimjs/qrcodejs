@@ -162,7 +162,7 @@ var QRCode;
 		
 		if (/android/i.test(sAgent)) { // android
 			android = true;
-			aMat = sAgent.toString().match(/android ([0-9]\.[0-9])/i);
+			var aMat = sAgent.toString().match(/android ([0-9]\.[0-9])/i);
 			
 			if (aMat && aMat[1]) {
 				android = parseFloat(aMat[1]);
@@ -318,7 +318,7 @@ var QRCode;
                     self._bSupportDataURI = false;
 
                     if (self._fFail) {
-                        _fFail.call(self);
+                        self._fFail.call(self);
                     }
                 };
                 var fOnSuccess = function() {
