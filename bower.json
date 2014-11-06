@@ -1,0 +1,16 @@
+{
+  "name": "qrcode.js",
+  "version": "0.0.1",
+  "main": "qrcode.js",
+  "ignore": [
+    "bower_components",
+    "node_modules",
+    "index.html",
+    "index.svg",
+    "jquery.min.js",
+    "qrcode.min.js",
+  ],
+  "dependencies": {
+    "jquery": ">=1.8.3"
+  }
+}
