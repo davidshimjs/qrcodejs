@@ -557,6 +557,10 @@ var QRCode;
 		if (typeof el == "string") {
 			el = document.getElementById(el);
 		}
+
+		if (this._htOption.useSVG) {
+			Drawing = svgDrawer;
+		}
 		
 		this._android = _getAndroid();
 		this._el = el;
