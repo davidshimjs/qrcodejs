@@ -13,7 +13,7 @@
     "index.html",
     "index.svg",
     "jquery.min.js",
-    "qrcode.min.js",
+    "qrcode.min.js"
   ],
   "dependencies": {
     "jquery": ">=1.8.3"
