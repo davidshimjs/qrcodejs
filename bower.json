@@ -12,8 +12,7 @@
     "node_modules",
     "index.html",
     "index.svg",
-    "jquery.min.js",
-    "qrcode.min.js"
+    "jquery.min.js"
   ],
   "dependencies": {
     "jquery": ">=1.8.3"
