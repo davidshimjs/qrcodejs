@@ -222,8 +222,7 @@ var QRCode;
 	var useSVG = document.documentElement.tagName.toLowerCase() === "svg";
 
 	// Drawing in DOM by using Table tag
-	//var Drawing = useSVG ? svgDrawer : !_isSupportCanvas() ? (function () {
-	var Drawing = useSVG ? svgDrawer : true ? (function () {
+	var Drawing = useSVG ? svgDrawer : !_isSupportCanvas() ? (function () {
 		var Drawing = function (el, htOption) {
 			this._el = el;
 			this._htOption = htOption;
