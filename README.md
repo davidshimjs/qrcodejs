@@ -13,7 +13,9 @@ new QRCode(document.getElementById("qrcode"), "http://jindo.dev.naver.com/collie
 or with some options
 
 ```
-var qrcode = new QRCode("test", {
+<div id="qrcode"></div>
+<script type="text/javascript">
+var qrcode = new QRCode(document.getElementById("qrcode"), {
 	text: "http://jindo.dev.naver.com/collie",
 	width: 128,
 	height: 128,
@@ -21,6 +23,7 @@ var qrcode = new QRCode("test", {
 	colorLight : "#ffffff",
 	correctLevel : QRCode.CorrectLevel.H
 });
+</script>
 ```
 
 and you can use some methods
