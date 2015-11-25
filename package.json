@@ -1,0 +1,21 @@
+{
+  "name": "qrcodejs",
+  "version": "0.0.1",
+  "description": "QRCode.js is javascript library for making QRCode. QRCode.js supports Cross-browser with HTML5 Canvas and table tag in DOM. QRCode.js has no dependencies.",
+  "main": "qrcode.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wenbing/qrcodejs"
+  },
+  "author": {
+    "name": "davidshimjs"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wenbing/qrcodejs/issues"
+  },
+  "homepage": "https://github.com/wenbing/qrcodejs"
+}
