@@ -558,15 +558,12 @@ var QRCode;
 		if (typeof el == "string") {
 			el = document.getElementById(el);
 		}
-
-		if (this._htOption.useSVG) {
-			Drawing = svgDrawer;
-		}
 		
 		this._android = _getAndroid();
 		this._el = el;
 		this._oQRCode = null;
-		this._oDrawing = new Drawing(this._el, this._htOption);
+               this._oDrawer = this._htOption.useSVG ? svgDrawer : Drawing
+		this._oDrawing = new this._oDrawer(this._el, this._htOption);
 		
 		if (this._htOption.text) {
 			this.makeCode(this._htOption.text);	
