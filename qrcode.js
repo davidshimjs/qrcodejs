@@ -539,7 +539,8 @@ var QRCode;
 			typeNumber : 4,
 			colorDark : "#000000",
 			colorLight : "#ffffff",
-			correctLevel : QRErrorCorrectLevel.H
+			correctLevel : QRErrorCorrectLevel.H,
+			useSVG: false
 		};
 		
 		if (typeof vOption === 'string') {
@@ -605,8 +606,13 @@ var QRCode;
 	 */
 	QRCode.prototype.clear = function () {
 		this._oDrawing.clear();
+		this._el.title = "";
+		if (!this._htOption.useSVG) {
+			this._oDrawing._elImage.src = "";
+			this._oDrawing._elImage.style.display = "none";
+		}
 	};
-	
+
 	/**
 	 * @name QRCode.CorrectLevel
 	 */
