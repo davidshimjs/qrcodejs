@@ -1,0 +1,23 @@
+{
+  "name": "qrcodejs",
+  "version": "0.0.1",
+  "description": "QRCode generator for browsers",
+  "main": "qrcode.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidshimjs/qrcodejs.git"
+  },
+  "keywords": [
+    "qrcode",
+    "qr"
+  ],
+  "author": "davidshimjs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davidshimjs/qrcodejs/issues"
+  },
+  "homepage": "https://github.com/davidshimjs/qrcodejs#readme"
+}
