@@ -189,7 +189,7 @@ var QRCode;
 			this.clear();
 
 			function makeSVG(tag, attrs) {
-				var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+			    var el = _el.ownerDocument.createElementNS('http://www.w3.org/2000/svg', tag);
 				for (var k in attrs)
 					if (attrs.hasOwnProperty(k)) el.setAttribute(k, attrs[k]);
 				return el;
@@ -354,14 +354,14 @@ var QRCode;
     		this._android = _getAndroid();
 		
 			this._htOption = htOption;
-			this._elCanvas = document.createElement("canvas");
+			this._elCanvas = el.ownerDocument.createElement("canvas");
 			this._elCanvas.width = htOption.width;
 			this._elCanvas.height = htOption.height;
 			el.appendChild(this._elCanvas);
 			this._el = el;
 			this._oContext = this._elCanvas.getContext("2d");
 			this._bIsPainted = false;
-			this._elImage = document.createElement("img");
+			this._elImage = el.ownerDocument.createElement("img");
 			this._elImage.alt = "Scan me!";
 			this._elImage.style.display = "none";
 			this._el.appendChild(this._elImage);
