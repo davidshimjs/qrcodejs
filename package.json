@@ -1,0 +1,22 @@
+{
+  "name": "qrcodejs",
+  "version": "0.0.1",
+  "description": "Cross-browser QRCode generator for javascript",
+  "main": "qrcode.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://vbifonixor@github.com/vbifonixor/qrcodejs.git"
+  },
+  "keywords": [
+    "qrcode"
+  ],
+  "author": "Sangmin Shim <ssm0123@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vbifonixor/qrcodejs/issues"
+  },
+  "homepage": "https://github.com/vbifonixor/qrcodejs#readme"
+}
