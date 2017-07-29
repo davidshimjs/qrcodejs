@@ -8,13 +8,17 @@
 <script type="text/javascript" src="qrcode.js"></script>
 </head>
 <body>
-<input id="text" type="text" value="http://jindo.dev.naver.com/collie" style="width:80%" /><br />
+<input id="text" type="text" value="http://www.naver.com" style="width:80%" /><br/>
 <div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
-
+<div id="qrcode2" style="width:200px; height:200px; margin-top:15px;"></div>
 <script type="text/javascript">
 var qrcode = new QRCode(document.getElementById("qrcode"), {
 	width : 100,
 	height : 100
+});
+var qrcode2 = new QRCode(document.getElementById("qrcode2"), {
+    width : 200,
+    height : 200
 });
 
 function makeCode () {		
@@ -27,10 +31,10 @@ function makeCode () {
 	}
 	
 	qrcode.makeCode(elText.value);
+	qrcode2.makeCode(elText.value)
 }
 
 makeCode();
-
 $("#text").
 	on("blur", function () {
 		makeCode();
