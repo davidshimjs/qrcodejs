@@ -1,0 +1,27 @@
+{
+  "name": "bluedrop-qrcode-generator",
+  "version": "1.0.0",
+  "description": "Cross-browser QR code generator for JavaScript",
+  "main": "qrcode-generator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoursePark/qrcode-generator.git"
+  },
+  "keywords": [
+    "autofill",
+    "directive"
+  ],
+  "contributors": [
+      {
+          "name": "Jared Abbott"
+      }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CoursePark/qrcode-generator/issues"
+  },
+  "homepage": "https://github.com/CoursePark/qrcode-generator#readme"
+}
