@@ -8,9 +8,20 @@
  * @see <a href="http://www.d-project.com/" target="_blank">http://www.d-project.com/</a>
  * @see <a href="http://jeromeetienne.github.com/jquery-qrcode/" target="_blank">http://jeromeetienne.github.com/jquery-qrcode/</a>
  */
-var QRCode;
+(function (name, context, factory) {
 
-(function () {
+	if (typeof module !== "undefined" && module.exports) {
+		module.exports = factory();
+	}
+	else if (typeof define === "function" && define.amd) {
+		define(factory);
+	}
+	else {
+		context[name] = factory();
+	}
+
+}("QRCode", typeof window !== "undefined" ? window : this, function () {
+ 	var QRCode;
 	//---------------------------------------------------------------------
 	// QRCode for JavaScript
 	//
@@ -611,4 +622,6 @@ var QRCode;
 	 * @name QRCode.CorrectLevel
 	 */
 	QRCode.CorrectLevel = QRErrorCorrectLevel;
-})();
+	
+	return QRCode;
+}));
