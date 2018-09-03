@@ -200,17 +200,17 @@ var QRCode;
 			_el.appendChild(svg);
 
 			svg.appendChild(makeSVG("rect", {"fill": _htOption.colorLight, "width": "100%", "height": "100%"}));
-			svg.appendChild(makeSVG("rect", {"fill": _htOption.colorDark, "width": "1", "height": "1", "id": "template"}));
 
+			var path = []
 			for (var row = 0; row < nCount; row++) {
 				for (var col = 0; col < nCount; col++) {
 					if (oQRCode.isDark(row, col)) {
-						var child = makeSVG("use", {"x": String(col), "y": String(row)});
-						child.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#template")
-						svg.appendChild(child);
+						path.push("M"+col+" "+row+"h1v1h-1z")
 					}
 				}
 			}
+			var child = makeSVG("path", {"d": path.join(""), "fill": _htOption.colorDark});
+			svg.appendChild(child);
 		};
 		Drawing.prototype.clear = function () {
 			while (this._el.hasChildNodes())
