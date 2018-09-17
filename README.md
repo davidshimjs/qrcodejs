@@ -35,6 +35,13 @@ qrcode.clear(); // clear the code.
 qrcode.makeCode("https://github.com/KeeeX"); // make another code.
 ```
 
+### Using with webpack
+
+```
+const QRCode = require("@keeex/qrcodejs-kx");
+// Use QRCode as usual
+```
+
 ## Browser Compatibility
 IE6~10, Chrome, Firefox, Safari, Opera, Mobile Safari, Android, Windows Mobile, ETC.
 
