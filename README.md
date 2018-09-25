@@ -5,7 +5,7 @@ QRCode.js has no dependencies.
 Project forked by KeeeX Company from davidshimjs/qrcodejs, we fixed Code Length Overflow error, and cleaned up the repository.
 
 ## Basic Usages
-```
+```html
 <div id="qrcode"></div>
 <script type="text/javascript">
 new QRCode(document.getElementById("qrcode"), "https://github.com/KeeeX/qrcodejs");
@@ -14,7 +14,7 @@ new QRCode(document.getElementById("qrcode"), "https://github.com/KeeeX/qrcodejs
 
 or with some options
 
-```
+```html
 <div id="qrcode"></div>
 <script type="text/javascript">
 var qrcode = new QRCode(document.getElementById("qrcode"), {
@@ -30,14 +30,14 @@ var qrcode = new QRCode(document.getElementById("qrcode"), {
 
 and you can use some methods
 
-```
+```javascript
 qrcode.clear(); // clear the code.
 qrcode.makeCode("https://github.com/KeeeX"); // make another code.
 ```
 
 ### Using with webpack
 
-```
+```javascript
 const QRCode = require("@keeex/qrcodejs-kx");
 // Use QRCode as usual
 ```
