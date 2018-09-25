@@ -2,21 +2,23 @@
 QRCode.js is javascript library for making QRCode. QRCode.js supports Cross-browser with HTML5 Canvas and table tag in DOM.
 QRCode.js has no dependencies.
 
+Project forked by KeeeX Company from davidshimjs/qrcodejs, we fixed Code Length Overflow error, and cleaned up the repository.
+
 ## Basic Usages
-```
+```html
 <div id="qrcode"></div>
 <script type="text/javascript">
-new QRCode(document.getElementById("qrcode"), "http://jindo.dev.naver.com/collie");
+new QRCode(document.getElementById("qrcode"), "https://github.com/KeeeX/qrcodejs");
 </script>
 ```
 
 or with some options
 
-```
+```html
 <div id="qrcode"></div>
 <script type="text/javascript">
 var qrcode = new QRCode(document.getElementById("qrcode"), {
-	text: "http://jindo.dev.naver.com/collie",
+	text: "https://github.com/KeeeX/qrcodejs",
 	width: 128,
 	height: 128,
 	colorDark : "#000000",
@@ -28,9 +30,16 @@ var qrcode = new QRCode(document.getElementById("qrcode"), {
 
 and you can use some methods
 
-```
+```javascript
 qrcode.clear(); // clear the code.
-qrcode.makeCode("http://naver.com"); // make another code.
+qrcode.makeCode("https://github.com/KeeeX"); // make another code.
+```
+
+### Using with webpack
+
+```javascript
+const QRCode = require("@keeex/qrcodejs-kx");
+// Use QRCode as usual
 ```
 
 ## Browser Compatibility
@@ -38,9 +47,3 @@ IE6~10, Chrome, Firefox, Safari, Opera, Mobile Safari, Android, Windows Mobile, 
 
 ## License
 MIT License
-
-## Contact
-twitter @davidshimjs
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/davidshimjs/qrcodejs/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-

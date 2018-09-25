@@ -1,0 +1,26 @@
+{
+  "name": "@keeex/qrcodejs-kx",
+  "version": "1.0.2",
+  "description": "QRCodeJS is a javascript library for making QRCode. It has no dependencies, is cross-browser and using HTML5 Canvas. This porject is a fork by KeeeX Company from davidshimjs, with Code Length Overflow fixed.",
+  "main": "qrcode.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KeeeX/qrcodejs.git"
+  },
+  "keywords": [
+    "qr",
+    "qrcode",
+    "generator",
+    "davidshimsjs",
+    "keeex"
+  ],
+  "author": "KeeeX",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KeeeX/qrcodejs/issues"
+  },
+  "homepage": "https://github.com/KeeeX/qrcodejs#readme"
+}
