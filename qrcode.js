@@ -416,7 +416,43 @@ var QRCode;
 			
 			this._bIsPainted = true;
 		};
-			
+    
+		function drawRoundRect(ctx, x, y, width, height, radius, lineWidth, lineColor) {
+			ctx.lineWidth = lineWidth;
+			ctx.strokeStyle = lineColor
+			ctx.beginPath(); 
+			ctx.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2); 
+			ctx.lineTo(width - radius + x, y);
+			ctx.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2);
+			ctx.lineTo(width + x, height + y - radius); 
+			ctx.arc(width - radius + x, height - radius + y, radius, 0, Math.PI * 1 / 2); 
+			ctx.lineTo(radius + x, height +y); 
+			ctx.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI); 
+			ctx.closePath();
+			ctx.stroke();
+		};
+		
+		Drawing.prototype.addIcon = async function (iconSrc) {
+			//通过ES6的async/await语法将异步的Promise转为同步方法
+			const image = await new Promise((resolve, reject) => {
+				const image = new Image();
+				image.src = iconSrc;
+				image.onload=()=>{resolve(image);};
+			});
+      //图片占整个二维码的比例，在QRCode.CorrectLevel.L测试可行，那么更高的纠错率就更没问题了
+			const ratio = 0.3;
+			const radius = 10;
+			const marginRatio = (1-ratio)/2;
+			const x = this._htOption.width * marginRatio;
+			const y = this._htOption.height * marginRatio;
+			const width = this._htOption.width * ratio;
+			const height = this._htOption.height * ratio;
+			drawRoundRect(this._oContext, x, y, width, height, this._htOption.iconRadius, this._htOption.iconBorderWidth, this._htOption.iconBorderColor);
+			this._oContext.clip();
+			this._oContext.drawImage(image, x, y, width, height);
+			this._oContext.restore();
+		};
+		
 		/**
 		 * Make the image from Canvas if the browser supports Data URI.
 		 */
@@ -539,7 +575,10 @@ var QRCode;
 			typeNumber : 4,
 			colorDark : "#000000",
 			colorLight : "#ffffff",
-			correctLevel : QRErrorCorrectLevel.H
+			correctLevel : QRErrorCorrectLevel.H,
+			iconSrc: undefined,
+			iconBorderWidth: 1,
+			iconBorderColor: "black",
 		};
 		
 		if (typeof vOption === 'string') {
@@ -578,12 +617,16 @@ var QRCode;
 	 * 
 	 * @param {String} sText link data
 	 */
-	QRCode.prototype.makeCode = function (sText) {
+	QRCode.prototype.makeCode = async function (sText) {
 		this._oQRCode = new QRCodeModel(_getTypeNumber(sText, this._htOption.correctLevel), this._htOption.correctLevel);
 		this._oQRCode.addData(sText);
 		this._oQRCode.make();
 		this._el.title = sText;
-		this._oDrawing.draw(this._oQRCode);			
+		this._oDrawing.draw(this._oQRCode);
+		if(this._htOption.iconSrc != undefined) {
+			//这里是异步的函数，只有加了await才会变成同步（注意：即使函数里面有await，这个函数也是异步执行的）
+			await this._oDrawing.addIcon(this._htOption.iconSrc);
+		}
 		this.makeImage();
 	};
 	
