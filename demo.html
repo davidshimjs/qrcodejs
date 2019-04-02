@@ -1,16 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf8">
 <script src="qrcode.js"></script>
-<style>
-/*! 外边框通过CSS设置样式 */
-#qrcode {
-	border: 10px dashed red;
-	border-radius: 10px;
-	width: 256px;
-	height: 256px;
-}
-</style>
 <script>
 window.onload=()=>{
 	// 简单方式
@@ -19,10 +11,10 @@ window.onload=()=>{
 	// 设置参数方式
 	var qrcode = new QRCode('qrcode', {
 	  text: 'your content',
-	  width: 256,
-	  height: 256,
+	  width: 125,
+	  height: 125,
 	  colorDark : '#000000',
-	  colorLight : '#ffffff',
+	  colorLight : "#fff",
 	  /*!
 		容错级别，可设置为：
 		QRCode.CorrectLevel.L
@@ -36,8 +28,14 @@ window.onload=()=>{
 		内部图片的边框通过如下配置设置样式
 	  */
 	  iconRadius: 10,
-	  iconBorderWidth: 5,
+	  iconBorderWidth: 0,
 	  iconBorderColor: "red",
+	  /*! 添加边框图片 */
+	  borderImg: "qrcode_border.jpg",
+	  borderImgWidth: 300,
+	  borderImgHeight: 300,
+	  qrcodeOffsetX: 88,
+	  qrcodeOffsetY: 108,
 	});
 
 	//清空原先的图像，重新做一张
@@ -48,5 +46,7 @@ window.onload=()=>{
 </head>
 <body>
 <div id="qrcode"></div>
+
+
 </body>
 </html>
