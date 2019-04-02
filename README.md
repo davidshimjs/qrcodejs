@@ -26,6 +26,39 @@ var qrcode = new QRCode(document.getElementById("qrcode"), {
 </script>
 ```
 
+新增选项
+```
+var qrcode = new QRCode('qrcode', {
+  text: 'your content',
+  width: 125,
+  height: 125,
+  colorDark : '#000000',
+  colorLight : "#fff",
+  /*!
+	容错级别，可设置为：
+	QRCode.CorrectLevel.L
+	QRCode.CorrectLevel.M
+	QRCode.CorrectLevel.Q
+	QRCode.CorrectLevel.H
+  */
+  correctLevel : QRCode.CorrectLevel.L,
+  iconSrc: "http://www.365mini.com/static/image/cry.gif",
+  /*!
+	内部图片的边框通过如下配置设置样式
+  */
+  iconRadius: 10,
+  iconBorderWidth: 3,
+  iconBorderColor: "red",
+  /*! 添加边框颜色或图片 */
+  borderWidth: 300,
+  borderHeight: 300,
+  borderImg: "qrcode_border.jpg",
+  borderBgColor: "Wheat",
+  qrcodeOffsetX: 88,
+  qrcodeOffsetY: 108,
+});
+```
+
 and you can use some methods
 
 ```
