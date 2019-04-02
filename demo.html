@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="qrcode.js"></script>
+<style>
+/*! 外边框通过CSS设置样式 */
+#qrcode {
+	border: 10px dashed red;
+	border-radius: 10px;
+	width: 256px;
+	height: 256px;
+}
+</style>
+<script>
+window.onload=()=>{
+	// 简单方式
+	//var q1 = new QRCode(document.getElementById('qrcode'), 'your content');
+
+	// 设置参数方式
+	var qrcode = new QRCode('qrcode', {
+	  text: 'your content',
+	  width: 256,
+	  height: 256,
+	  colorDark : '#000000',
+	  colorLight : '#ffffff',
+	  /*!
+		容错级别，可设置为：
+		QRCode.CorrectLevel.L
+		QRCode.CorrectLevel.M
+		QRCode.CorrectLevel.Q
+		QRCode.CorrectLevel.H
+	  */
+	  correctLevel : QRCode.CorrectLevel.L,
+	  iconSrc: "http://www.365mini.com/static/image/cry.gif",
+	  /*!
+		内部图片的边框通过如下配置设置样式
+	  */
+	  iconRadius: 10,
+	  iconBorderWidth: 5,
+	  iconBorderColor: "red",
+	});
+
+	//清空原先的图像，重新做一张
+	//qrcode.clear();
+	//qrcode.makeCode('new content');
+}
+</script>
+</head>
+<body>
+<div id="qrcode"></div>
+</body>
+</html>
