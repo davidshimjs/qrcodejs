@@ -168,8 +168,13 @@ var QRCode;
 				android = parseFloat(aMat[1]);
 			}
 		}
-		
-		return android;
+		/*
+		由于android 2.x的旧机子已经根本不用考虑了，
+		而这个方法在makeImage的时候被调用，并不是用来判断是否是android机子，
+		只是用来判断是需要考虑android老设备不支持Data-URI的问题，所以这里直接置false，不考虑即可
+		*/
+		//return android;
+		return false;
 	}
 	
 	var svgDrawer = (function() {
