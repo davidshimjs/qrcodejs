@@ -361,8 +361,8 @@ var QRCode;
 		
 			this._htOption = htOption;
 			this._elCanvas = document.createElement("canvas");
-			this._elCanvas.width = htOption.borderImgWidth ? htOption.borderImgWidth : htOption.width;
-			this._elCanvas.height = htOption.borderImgHeight ? htOption.borderImgHeight : htOption.height;
+			this._elCanvas.width = htOption.borderWidth ? htOption.borderWidth : htOption.width;
+			this._elCanvas.height = htOption.borderHeight ? htOption.borderHeight : htOption.height;
 			el.appendChild(this._elCanvas);
 			this._el = el;
 			this._oContext = this._elCanvas.getContext("2d");
@@ -370,7 +370,7 @@ var QRCode;
 			this._elImage = document.createElement("img");
 			this._elImage.alt = "Scan me!";
 			this._elImage.style.display = "none";
-			this._el.appendChild(this._elImage);
+			//this._el.appendChild(this._elImage);
 			this._bSupportDataURI = null;
 		};
 			
@@ -469,7 +469,7 @@ var QRCode;
 				image.src = borderSrc;
 				image.onload=()=>{resolve(image);};
 			});
-			this._oContext.drawImage(image, 0, 0, this._htOption.borderImgWidth, this._htOption.borderImgHeight);
+			this._oContext.drawImage(image, 0, 0, this._htOption.borderWidth, this._htOption.borderHeight);
 		}			
 		
 		/**
@@ -603,8 +603,8 @@ var QRCode;
 			//边框图片
 			borderImg: undefined,
 			//整个画布大小，边框充满整个画布
-			borderImgWidth: undefined,
-			borderImgHeight: undefined,
+			borderWidth: undefined,
+			borderHeight: undefined,
 			//二维码相对画布或边框图片的偏移
 			qrcodeOffsetX: undefined,
 			qrcodeOffsetY: undefined,
@@ -651,23 +651,42 @@ var QRCode;
 		this._oQRCode.addData(sText);
 		this._oQRCode.make();
 		this._el.title = sText;
-		const borderExists = typeof(this._htOption.qrcodeOffsetX) !== undefined && typeof(this._htOption.qrcodeOffsetY)  !== undefined;
+		const offsetExists = typeof(this._htOption.qrcodeOffsetX) !== "undefined" && typeof(this._htOption.qrcodeOffsetY) !== "undefined";
+		const borderExists = typeof(this._htOption.borderWidth) !== "undefined" && typeof(this._htOption.borderHeight) !== "undefined";
+		const borderImgExists = typeof(this._htOption.borderImg) !== "undefined";
+		const borderBgColorExists = typeof this._htOption.borderBgColor !== "undefined" && borderExists;
 		
-		if(borderExists) {
+		if(borderBgColorExists) {
+			//如果不填充白色，下载下来的图片默认为透明色，很难看
+			this._oDrawing._oContext.fillStyle = this._htOption.borderBgColor ? this._htOption.borderBgColor : "white";
+			this._oDrawing._oContext.fillRect(0, 0, this._htOption.borderWidth, this._htOption.borderHeight);
+			this._oDrawing._oContext.save();
+		}
+		
+		if(offsetExists) {
 			const x = this._htOption.qrcodeOffsetX;
 			const y = this._htOption.qrcodeOffsetY;
 			this._oDrawing._oContext.save();
 			this._oDrawing._oContext.translate(x, y);
 		}
+		
+		if(borderBgColorExists) {
+			this._oDrawing._oContext.rect(0,0,this._htOption.width,this._htOption.height);
+			this._oDrawing._oContext.clip();
+		}
 		this._oDrawing.draw(this._oQRCode);
-		if(typeof(this._htOption.iconSrc) !== undefined) {
+		
+		if(typeof(this._htOption.iconSrc) !== "undefined") {
 			//这里是异步的函数，只有加了await才会变成同步（注意：即使函数里面有await，这个函数也是异步执行的）
 			await this._oDrawing.addIcon(this._htOption.iconSrc);
 		}
-		if(borderExists) {
+		if(borderBgColorExists) {
 			this._oDrawing._oContext.restore();
 		}
-		if(typeof(this._htOption.borderImg) !== undefined) {
+		if(offsetExists) {
+			this._oDrawing._oContext.restore();
+		}
+		if(borderImgExists) {
 			await this._oDrawing.addBorder(this._htOption.borderImg);
 		}
 		this.makeImage();
