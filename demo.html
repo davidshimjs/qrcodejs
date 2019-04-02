@@ -3,6 +3,15 @@
 <head>
 <meta charset="utf8">
 <script src="qrcode.js"></script>
+<style>
+/*! 外边框通过CSS设置样式 */
+#qrcode {
+	border: 10px dashed red;
+	border-radius: 10px;
+	width: 300px;
+	height: 300px;
+}
+</style>
 <script>
 window.onload=()=>{
 	// 简单方式
@@ -28,7 +37,7 @@ window.onload=()=>{
 		内部图片的边框通过如下配置设置样式
 	  */
 	  iconRadius: 10,
-	  iconBorderWidth: 0,
+	  iconBorderWidth: 3,
 	  iconBorderColor: "red",
 	  /*! 添加边框图片 */
 	  borderImg: "qrcode_border.jpg",
