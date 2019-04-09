@@ -361,8 +361,8 @@ var QRCode;
 		
 			this._htOption = htOption;
 			this._elCanvas = document.createElement("canvas");
-			this._elCanvas.width = htOption.borderWidth ? htOption.borderWidth : htOption.width;
-			this._elCanvas.height = htOption.borderHeight ? htOption.borderHeight : htOption.height;
+			this._elCanvas.width = htOption.curtainWidth ? htOption.curtainWidth : htOption.width;
+			this._elCanvas.height = htOption.curtainHeight ? htOption.curtainHeight : htOption.height;
 			el.appendChild(this._elCanvas);
 			this._el = el;
 			this._oContext = this._elCanvas.getContext("2d");
@@ -463,13 +463,13 @@ var QRCode;
 			this._oContext.restore();
 		};
 		
-		Drawing.prototype.addBorder = async function (borderSrc) {
+		Drawing.prototype.addCurtain = async function (curtainSrc) {
 			const image = await new Promise((resolve, reject) => {
 				const image = new Image();
-				image.src = borderSrc;
+				image.src = curtainSrc;
 				image.onload=()=>{resolve(image);};
 			});
-			this._oContext.drawImage(image, 0, 0, this._htOption.borderWidth, this._htOption.borderHeight);
+			this._oContext.drawImage(image, 0, 0, this._htOption.curtainWidth, this._htOption.curtainHeight);
 		}			
 		
 		/**
@@ -600,11 +600,12 @@ var QRCode;
 			iconSrc: undefined,
 			iconBorderWidth: 0,
 			iconBorderColor: "black",
-			//边框图片
-			borderImg: undefined,
+			//幕布图片
+			curtainImg: undefined,
+			curtainBgColor: undefined,
 			//整个画布大小，边框充满整个画布
-			borderWidth: undefined,
-			borderHeight: undefined,
+			curtainWidth: undefined,
+			curtainHeight: undefined,
 			//二维码相对画布或边框图片的偏移
 			qrcodeOffsetX: undefined,
 			qrcodeOffsetY: undefined,
@@ -652,14 +653,14 @@ var QRCode;
 		this._oQRCode.make();
 		this._el.title = sText;
 		const offsetExists = typeof(this._htOption.qrcodeOffsetX) !== "undefined" && typeof(this._htOption.qrcodeOffsetY) !== "undefined";
-		const borderExists = typeof(this._htOption.borderWidth) !== "undefined" && typeof(this._htOption.borderHeight) !== "undefined";
-		const borderImgExists = typeof(this._htOption.borderImg) !== "undefined";
-		const borderBgColorExists = typeof this._htOption.borderBgColor !== "undefined" && borderExists;
+		const curtainExists = typeof(this._htOption.curtainWidth) !== "undefined" && typeof(this._htOption.curtainHeight) !== "undefined";
+		const curtainImgExists = typeof(this._htOption.curtainImg) !== "undefined";
+		const curtainBgColorExists = typeof this._htOption.curtainBgColor !== "undefined" && curtainExists;
 		
-		if(borderBgColorExists) {
+		if(curtainBgColorExists) {
 			//如果不填充白色，下载下来的图片默认为透明色，很难看
-			this._oDrawing._oContext.fillStyle = this._htOption.borderBgColor ? this._htOption.borderBgColor : "white";
-			this._oDrawing._oContext.fillRect(0, 0, this._htOption.borderWidth, this._htOption.borderHeight);
+			this._oDrawing._oContext.fillStyle = this._htOption.curtainBgColor ? this._htOption.curtainBgColor : "white";
+			this._oDrawing._oContext.fillRect(0, 0, this._htOption.curtainWidth, this._htOption.curtainHeight);
 			this._oDrawing._oContext.save();
 		}
 		
@@ -670,7 +671,7 @@ var QRCode;
 			this._oDrawing._oContext.translate(x, y);
 		}
 		
-		if(borderBgColorExists) {
+		if(curtainBgColorExists) {
 			this._oDrawing._oContext.rect(0,0,this._htOption.width,this._htOption.height);
 			this._oDrawing._oContext.clip();
 		}
@@ -680,13 +681,13 @@ var QRCode;
 			//这里是异步的函数，只有加了await才会变成同步（注意：即使函数里面有await，这个函数也是异步执行的）
 			await this._oDrawing.addIcon(this._htOption.iconSrc);
 		}
-		if(borderBgColorExists) {
+		if(curtainBgColorExists) {
 			this._oDrawing._oContext.restore();
 		}
 		if(offsetExists) {
 			this._oDrawing._oContext.restore();
 		}
-		if(borderImgExists) {
+		if(curtainImgExists) {
 			await this._oDrawing.addBorder(this._htOption.borderImg);
 		}
 		this.makeImage();
