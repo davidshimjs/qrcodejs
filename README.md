@@ -16,11 +16,17 @@ or with some options
 <div id="qrcode"></div>
 <script type="text/javascript">
 var qrcode = new QRCode(document.getElementById("qrcode"), {
+//二维码内容	
 	text: "http://jindo.dev.naver.com/collie",
+//二维码宽度
 	width: 128,
+//二维码高度
 	height: 128,
+//二维码前景色
 	colorDark : "#000000",
+//二维码背景色
 	colorLight : "#ffffff",
+//容错级别
 	correctLevel : QRCode.CorrectLevel.H
 });
 </script>
@@ -29,10 +35,15 @@ var qrcode = new QRCode(document.getElementById("qrcode"), {
 新增选项
 ```
 var qrcode = new QRCode('qrcode', {
+//二维码内容
   text: 'your content',
+//二维码宽度
   width: 125,
+//二维码高度
   height: 125,
+//二维码前景色
   colorDark : '#000000',
+//二维码背景色
   colorLight : "#fff",
   /*!
 	容错级别，可设置为：
@@ -42,19 +53,25 @@ var qrcode = new QRCode('qrcode', {
 	QRCode.CorrectLevel.H
   */
   correctLevel : QRCode.CorrectLevel.L,
+//二维码中心图片
   iconSrc: "http://www.365mini.com/static/image/cry.gif",
-  /*!
-	内部图片的边框通过如下配置设置样式
-  */
+//二维码中心图片边框弧度
   iconRadius: 10,
+//二维码中心图片边框宽度
   iconBorderWidth: 3,
+//二维码中心图片边框颜色
   iconBorderColor: "red",
-  /*! 添加边框颜色或图片 */
-  borderWidth: 300,
-  borderHeight: 300,
-  borderImg: "qrcode_border.jpg",
-  borderBgColor: "Wheat",
+//外围幕布（或画布）的宽度
+  curtainWidth: 300,
+//外围幕布（或画布）的高度
+  curtainHeight: 300,
+//外围幕布（或画布）图片
+  curtainImg: "qrcode_border.jpg",
+//外围幕布（或画布）底色
+  curtainBgColor: "Wheat",
+//二维码相对外围幕布（或画布）的X偏移
   qrcodeOffsetX: 88,
+//二维码相对外围幕布（或画布）的Y偏移
   qrcodeOffsetY: 108,
 });
 ```
