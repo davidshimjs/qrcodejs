@@ -282,7 +282,8 @@ var QRCode;
 		function _onMakeImage() {
 			this._elImage.src = this._elCanvas.toDataURL("image/png");
 			this._elImage.style.display = "block";
-			this._elCanvas.style.display = "none";			
+			//如果没有中心icon的话，二维码display会被设为none
+			//this._elCanvas.style.display = "none";			
 		}
 		
 		// Android 2.1 bug workaround
@@ -681,6 +682,7 @@ var QRCode;
 			//这里是异步的函数，只有加了await才会变成同步（注意：即使函数里面有await，这个函数也是异步执行的）
 			await this._oDrawing.addIcon(this._htOption.iconSrc);
 		}
+		
 		if(curtainBgColorExists) {
 			this._oDrawing._oContext.restore();
 		}
