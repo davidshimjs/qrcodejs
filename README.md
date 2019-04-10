@@ -94,3 +94,5 @@ twitter @davidshimjs
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/davidshimjs/qrcodejs/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
+## Online Demo
+[Online Demo](https://555chy.github.io/qrcodejs/demo.html)
