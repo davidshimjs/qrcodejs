@@ -688,7 +688,7 @@ var QRCode;
 			this._oDrawing._oContext.restore();
 		}
 		if(curtainImgExists) {
-			await this._oDrawing.addBorder(this._htOption.borderImg);
+			await this._oDrawing.addCurtain(this._htOption.curtainImg);
 		}
 		this.makeImage();
 	};
