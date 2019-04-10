@@ -66,7 +66,7 @@ var qrcode = new QRCode('qrcode', {
 //外围幕布（或画布）的高度
   curtainHeight: 300,
 //外围幕布（或画布）图片
-  curtainImg: "qrcode_border.jpg",
+  curtainImg: "qrcode_border.png",
 //外围幕布（或画布）底色
   curtainBgColor: "Wheat",
 //二维码相对外围幕布（或画布）的X偏移
