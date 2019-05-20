@@ -690,7 +690,9 @@ var QRCode;
 			this._oDrawing._oContext.restore();
 		}
 		if(curtainImgExists) {
+			this._oDrawing._oContext.globalCompositeOperation = "destination-over";
 			await this._oDrawing.addCurtain(this._htOption.curtainImg);
+			this._oDrawing._oContext.globalCompositeOperation = "source-over";
 		}
 		this.makeImage();
 	};
