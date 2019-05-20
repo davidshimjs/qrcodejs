@@ -157,6 +157,7 @@ var QRCode;
 	
 	// android 2.x doesn't support Data-URI spec
 	function _getAndroid() {
+		/*
 		var android = false;
 		var sAgent = navigator.userAgent;
 		
@@ -168,8 +169,13 @@ var QRCode;
 				android = parseFloat(aMat[1]);
 			}
 		}
-		
 		return android;
+		
+		由于android 2.x的旧机子已经根本不用考虑了，
+		而这个方法在makeImage的时候被调用，并不是用来判断是否是android机子，
+		只是用来判断是需要考虑android老设备不支持Data-URI的问题，所以这里直接置false，不考虑即可
+		*/
+		return false;
 	}
 	
 	var svgDrawer = (function() {
@@ -276,7 +282,8 @@ var QRCode;
 		function _onMakeImage() {
 			this._elImage.src = this._elCanvas.toDataURL("image/png");
 			this._elImage.style.display = "block";
-			this._elCanvas.style.display = "none";			
+			//如果没有中心icon的话，二维码display会被设为none
+			//this._elCanvas.style.display = "none";			
 		}
 		
 		// Android 2.1 bug workaround
@@ -355,8 +362,8 @@ var QRCode;
 		
 			this._htOption = htOption;
 			this._elCanvas = document.createElement("canvas");
-			this._elCanvas.width = htOption.width;
-			this._elCanvas.height = htOption.height;
+			this._elCanvas.width = htOption.curtainWidth ? htOption.curtainWidth : htOption.width;
+			this._elCanvas.height = htOption.curtainHeight ? htOption.curtainHeight : htOption.height;
 			el.appendChild(this._elCanvas);
 			this._el = el;
 			this._oContext = this._elCanvas.getContext("2d");
@@ -364,7 +371,7 @@ var QRCode;
 			this._elImage = document.createElement("img");
 			this._elImage.alt = "Scan me!";
 			this._elImage.style.display = "none";
-			this._el.appendChild(this._elImage);
+			//this._el.appendChild(this._elImage);
 			this._bSupportDataURI = null;
 		};
 			
@@ -374,6 +381,7 @@ var QRCode;
 		 * @param {QRCode} oQRCode 
 		 */
 		Drawing.prototype.draw = function (oQRCode) {
+			//目前真正被调用的是该draw方法
             var _elImage = this._elImage;
             var _oContext = this._oContext;
             var _htOption = this._htOption;
@@ -416,7 +424,55 @@ var QRCode;
 			
 			this._bIsPainted = true;
 		};
+    
+		function drawRoundRect(ctx, x, y, width, height, radius, lineWidth, lineColor) {
+			ctx.lineWidth = lineWidth;
+			ctx.strokeStyle = lineColor;
+			ctx.beginPath(); 
+			ctx.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2); 
+			ctx.lineTo(width - radius + x, y);
+			ctx.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2);
+			ctx.lineTo(width + x, height + y - radius); 
+			ctx.arc(width - radius + x, height - radius + y, radius, 0, Math.PI * 1 / 2); 
+			ctx.lineTo(radius + x, height +y); 
+			ctx.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI); 
+			ctx.closePath();
+			//因为有的时候图片不需要设置边框线
+			if(lineWidth > 0) ctx.stroke();
+		};
+		
+		Drawing.prototype.addIcon = async function (iconSrc) {
+			//通过ES6的async/await语法将异步的Promise转为同步方法
+			const image = await new Promise((resolve, reject) => {
+				const image = new Image();
+				image.src = iconSrc;
+				image.onload=()=>{resolve(image);};
+			});
 			
+			//图片占整个二维码的比例，在QRCode.CorrectLevel.L测试可行，那么更高的纠错率就更没问题了
+			const ratio = 0.3;
+			const radius = 10;
+			const marginRatio = (1-ratio)/2;
+			const x = this._htOption.width * marginRatio;
+			const y = this._htOption.height * marginRatio;
+			const width = this._htOption.width * ratio;
+			const height = this._htOption.height * ratio;
+			drawRoundRect(this._oContext, x, y, width, height, this._htOption.iconRadius, this._htOption.iconBorderWidth, this._htOption.iconBorderColor);
+			this._oContext.save();
+			this._oContext.clip();
+			this._oContext.drawImage(image, x, y, width, height);
+			this._oContext.restore();
+		};
+		
+		Drawing.prototype.addCurtain = async function (curtainSrc) {
+			const image = await new Promise((resolve, reject) => {
+				const image = new Image();
+				image.src = curtainSrc;
+				image.onload=()=>{resolve(image);};
+			});
+			this._oContext.drawImage(image, 0, 0, this._htOption.curtainWidth, this._htOption.curtainHeight);
+		}			
+		
 		/**
 		 * Make the image from Canvas if the browser supports Data URI.
 		 */
@@ -534,12 +590,26 @@ var QRCode;
 	 */
 	QRCode = function (el, vOption) {
 		this._htOption = {
+			//二维码大小
 			width : 256, 
 			height : 256,
 			typeNumber : 4,
 			colorDark : "#000000",
 			colorLight : "#ffffff",
-			correctLevel : QRErrorCorrectLevel.H
+			correctLevel : QRErrorCorrectLevel.H,
+			//二维码中间图标
+			iconSrc: undefined,
+			iconBorderWidth: 0,
+			iconBorderColor: "black",
+			//幕布图片
+			curtainImg: undefined,
+			curtainBgColor: undefined,
+			//整个画布大小，边框充满整个画布
+			curtainWidth: undefined,
+			curtainHeight: undefined,
+			//二维码相对画布或边框图片的偏移
+			qrcodeOffsetX: undefined,
+			qrcodeOffsetY: undefined,
 		};
 		
 		if (typeof vOption === 'string') {
@@ -578,12 +648,52 @@ var QRCode;
 	 * 
 	 * @param {String} sText link data
 	 */
-	QRCode.prototype.makeCode = function (sText) {
+	QRCode.prototype.makeCode = async function (sText) {
 		this._oQRCode = new QRCodeModel(_getTypeNumber(sText, this._htOption.correctLevel), this._htOption.correctLevel);
 		this._oQRCode.addData(sText);
 		this._oQRCode.make();
 		this._el.title = sText;
-		this._oDrawing.draw(this._oQRCode);			
+		const offsetExists = typeof(this._htOption.qrcodeOffsetX) !== "undefined" && typeof(this._htOption.qrcodeOffsetY) !== "undefined";
+		const curtainExists = typeof(this._htOption.curtainWidth) !== "undefined" && typeof(this._htOption.curtainHeight) !== "undefined";
+		const curtainImgExists = typeof(this._htOption.curtainImg) !== "undefined";
+		const curtainBgColorExists = typeof this._htOption.curtainBgColor !== "undefined" && curtainExists;
+		
+		if(curtainBgColorExists) {
+			//如果不填充白色，下载下来的图片默认为透明色，很难看
+			this._oDrawing._oContext.fillStyle = this._htOption.curtainBgColor ? this._htOption.curtainBgColor : "white";
+			this._oDrawing._oContext.fillRect(0, 0, this._htOption.curtainWidth, this._htOption.curtainHeight);
+			this._oDrawing._oContext.save();
+		}
+		
+		if(offsetExists) {
+			const x = this._htOption.qrcodeOffsetX;
+			const y = this._htOption.qrcodeOffsetY;
+			this._oDrawing._oContext.save();
+			this._oDrawing._oContext.translate(x, y);
+		}
+		
+		if(curtainBgColorExists) {
+			this._oDrawing._oContext.rect(0,0,this._htOption.width,this._htOption.height);
+			this._oDrawing._oContext.clip();
+		}
+		this._oDrawing.draw(this._oQRCode);
+		
+		if(typeof(this._htOption.iconSrc) !== "undefined") {
+			//这里是异步的函数，只有加了await才会变成同步（注意：即使函数里面有await，这个函数也是异步执行的）
+			await this._oDrawing.addIcon(this._htOption.iconSrc);
+		}
+		
+		if(curtainBgColorExists) {
+			this._oDrawing._oContext.restore();
+		}
+		if(offsetExists) {
+			this._oDrawing._oContext.restore();
+		}
+		if(curtainImgExists) {
+			this._oDrawing._oContext.globalCompositeOperation = "destination-over";
+			await this._oDrawing.addCurtain(this._htOption.curtainImg);
+			this._oDrawing._oContext.globalCompositeOperation = "source-over";
+		}
 		this.makeImage();
 	};
 	
