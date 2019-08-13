@@ -588,6 +588,13 @@ var QRCode;
 	};
 	
 	/**
+	 * Get the QRCode base64 image string
+	 */
+	QRCode.prototype.getBase64 = function () {
+		return this._oDrawing._elCanvas.toDataURL("image/png");
+	};
+	
+	/**
 	 * Make the Image from Canvas element
 	 * - It occurs automatically
 	 * - Android below 3 doesn't support Data-URI spec.
