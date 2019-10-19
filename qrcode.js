@@ -572,6 +572,19 @@ var QRCode;
 			this.makeCode(this._htOption.text);	
 		}
 	};
+
+	QRCode.prototype.colorDark = function(color){
+		this._htOption.colorDark = color
+	}
+	QRCode.prototype.colorLight = function(color){
+		this._htOption.colorLight = color
+	}
+	QRCode.prototype.typeNumber = function(value){
+		this._htOption.typeNumber = value
+	}
+	QRCode.prototype.correctLevel = function(correctionLevel){
+		this._htOption.correctLevel = correctionLevel
+	}
 	
 	/**
 	 * Make the QRCode

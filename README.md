@@ -31,6 +31,8 @@ and you can use some methods
 ```
 qrcode.clear(); // clear the code.
 qrcode.makeCode("http://naver.com"); // make another code.
+qrcode.colorDark("#FF0000"); //change the Dark Color on the Go
+qrcode.colorLight("#FF0000"); //change the Light Color on the Go
 ```
 
 ## Browser Compatibility
