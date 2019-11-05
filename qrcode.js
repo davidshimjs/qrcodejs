@@ -276,7 +276,8 @@ var QRCode;
 		function _onMakeImage() {
 			this._elImage.src = this._elCanvas.toDataURL("image/png");
 			this._elImage.style.display = "block";
-			this._elCanvas.style.display = "none";			
+			this._elCanvas.style.display = "none";	
+			this._htOption.onImageLoad && this._htOption.onImageLoad.call(self, this._elImage);
 		}
 		
 		// Android 2.1 bug workaround
