@@ -162,7 +162,7 @@ var QRCode;
 		
 		if (/android/i.test(sAgent)) { // android
 			android = true;
-			var aMat = sAgent.toString().match(/android ([0-9]\.[0-9])/i);
+			var aMat = sAgent.toString().match(/android ([0-9]+(\.[0-9]+)*)/i);
 			
 			if (aMat && aMat[1]) {
 				android = parseFloat(aMat[1]);
@@ -276,7 +276,8 @@ var QRCode;
 		function _onMakeImage() {
 			this._elImage.src = this._elCanvas.toDataURL("image/png");
 			this._elImage.style.display = "block";
-			this._elCanvas.style.display = "none";			
+			this._elCanvas.style.display = "none";	
+			this._htOption.onImageLoad && this._htOption.onImageLoad.call(this, this._elImage);
 		}
 		
 		// Android 2.1 bug workaround
