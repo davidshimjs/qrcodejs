@@ -8,13 +8,13 @@
 <script type="text/javascript" src="qrcode.js"></script>
 </head>
 <body>
-<input id="text" type="text" value="http://jindo.dev.naver.com/collie" style="width:80%" /><br />
-<div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
+<textarea id="text" style="display:inline-block;" rows="12" cols="72">https://github.com/davidshimjs/qrcodejs</textarea>
+<div    id="qrcode" style="display:inline-block;"></div>
 
 <script type="text/javascript">
 var qrcode = new QRCode(document.getElementById("qrcode"), {
-	width : 100,
-	height : 100
+	width  : 220,
+	height : 220
 });
 
 function makeCode () {		
