@@ -377,40 +377,58 @@ var QRCode;
             var _elImage = this._elImage;
             var _oContext = this._oContext;
             var _htOption = this._htOption;
-            
+			
 			var nCount = oQRCode.getModuleCount();
-			var nWidth = _htOption.width / nCount;
-			var nHeight = _htOption.height / nCount;
+			var nCountWithQuietZone = nCount;
+			if(_htOption.addQuietZone) {
+				nCountWithQuietZone += 2;
+			}
+			var nWidth = _htOption.width / nCountWithQuietZone;
+			var nHeight = _htOption.height / nCountWithQuietZone;
 			var nRoundedWidth = Math.round(nWidth);
 			var nRoundedHeight = Math.round(nHeight);
 
 			_elImage.style.display = "none";
 			this.clear();
+            
+			var drawBitSquare = function(row, col, bIsDark) {
+				var nLeft = col * nWidth;
+				var nTop = row * nHeight;
+				_oContext.strokeStyle =  bIsDark ? _htOption.colorDark : _htOption.colorLight;	
+				_oContext.lineWidth = 1;
+				_oContext.fillStyle = bIsDark ? _htOption.colorDark : _htOption.colorLight;					
+				_oContext.fillRect(nLeft, nTop, nWidth, nHeight);
+				
+				// 안티 앨리어싱 방지 처리
+				_oContext.strokeRect(
+					Math.floor(nLeft) + 0.5,
+					Math.floor(nTop) + 0.5,
+					nRoundedWidth,
+					nRoundedHeight
+				);
+				
+				_oContext.strokeRect(
+					Math.ceil(nLeft) - 0.5,
+					Math.ceil(nTop) - 0.5,
+					nRoundedWidth,
+					nRoundedHeight
+				);
+			}
+			
+			if(_htOption.addQuietZone) {
+				var last = nCountWithQuietZone - 1;
+				
+				for (var i = 0; i < nCountWithQuietZone; i++) {
+					drawBitSquare(0,    i, false);
+					drawBitSquare(last, i, false);
+					drawBitSquare(i,    0, false);
+					drawBitSquare(i, last, false);
+				} 
+			}
 			
 			for (var row = 0; row < nCount; row++) {
 				for (var col = 0; col < nCount; col++) {
-					var bIsDark = oQRCode.isDark(row, col);
-					var nLeft = col * nWidth;
-					var nTop = row * nHeight;
-					_oContext.strokeStyle = bIsDark ? _htOption.colorDark : _htOption.colorLight;
-					_oContext.lineWidth = 1;
-					_oContext.fillStyle = bIsDark ? _htOption.colorDark : _htOption.colorLight;					
-					_oContext.fillRect(nLeft, nTop, nWidth, nHeight);
-					
-					// 안티 앨리어싱 방지 처리
-					_oContext.strokeRect(
-						Math.floor(nLeft) + 0.5,
-						Math.floor(nTop) + 0.5,
-						nRoundedWidth,
-						nRoundedHeight
-					);
-					
-					_oContext.strokeRect(
-						Math.ceil(nLeft) - 0.5,
-						Math.ceil(nTop) - 0.5,
-						nRoundedWidth,
-						nRoundedHeight
-					);
+					drawBitSquare(row + 1, col + 1, oQRCode.isDark(row, col));
 				}
 			}
 			
@@ -531,6 +549,7 @@ var QRCode;
 	 * @param {String} [vOption.colorDark="#000000"]
 	 * @param {String} [vOption.colorLight="#ffffff"]
 	 * @param {QRCode.CorrectLevel} [vOption.correctLevel=QRCode.CorrectLevel.H] [L|M|Q|H] 
+	 * @param {Boolean} [vOption.addQuietZone=false]
 	 */
 	QRCode = function (el, vOption) {
 		this._htOption = {
@@ -539,7 +558,8 @@ var QRCode;
 			typeNumber : 4,
 			colorDark : "#000000",
 			colorLight : "#ffffff",
-			correctLevel : QRErrorCorrectLevel.H
+			correctLevel : QRErrorCorrectLevel.H,
+			addQuietZone : false
 		};
 		
 		if (typeof vOption === 'string') {
