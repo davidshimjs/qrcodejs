@@ -276,7 +276,8 @@ var QRCode;
 		function _onMakeImage() {
 			this._elImage.src = this._elCanvas.toDataURL("image/png");
 			this._elImage.style.display = "block";
-			this._elCanvas.style.display = "none";			
+			this._elCanvas.style.display = "none";
+			this._callback(this);			
 		}
 		
 		// Android 2.1 bug workaround
@@ -323,8 +324,8 @@ var QRCode;
                     }
                 };
                 var fOnSuccess = function() {
-                    self._bSupportDataURI = true;
-
+					self._bSupportDataURI = true;
+					
                     if (self._fSuccess) {
                         self._fSuccess.call(self);
                     }
@@ -366,6 +367,7 @@ var QRCode;
 			this._elImage.style.display = "none";
 			this._el.appendChild(this._elImage);
 			this._bSupportDataURI = null;
+			this._callback = htOption.callback;
 		};
 			
 		/**
