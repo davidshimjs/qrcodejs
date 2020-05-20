@@ -21,7 +21,17 @@ var qrcode = new QRCode(document.getElementById("qrcode"), {
 	height: 128,
 	colorDark : "#000000",
 	colorLight : "#ffffff",
-	correctLevel : QRCode.CorrectLevel.H
+	correctLevel : QRCode.CorrectLevel.H,
+	/**
+	* Fired when QR image element is loaded
+	* @param {HTMLElement} QR image DOM element
+	* @param {string} text to generate QR-code image
+	* @return {void}
+	*/
+	callback: function (image, text) {
+		console.log('text QR code was created from', text);
+		console.log('loaded image DOM element', image);
+	}
 });
 </script>
 ```
