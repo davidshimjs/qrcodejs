@@ -14,7 +14,11 @@
 <script type="text/javascript">
 var qrcode = new QRCode(document.getElementById("qrcode"), {
 	width : 100,
-	height : 100
+	height : 100,
+	callback: function(image, text) {
+		console.log('Input text', text);
+		console.log('Loaded image element', image);
+	}
 });
 
 function makeCode () {		
