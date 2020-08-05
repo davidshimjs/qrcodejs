@@ -156,14 +156,15 @@ var QRCode;
 	}
 	
 	// android 2.x doesn't support Data-URI spec
+
 	function _getAndroid() {
 		var android = false;
 		var sAgent = navigator.userAgent;
-		
 		if (/android/i.test(sAgent)) { // android
-			android = true;
-			var aMat = sAgent.toString().match(/android ([0-9]\.[0-9])/i);
-			
+      android = true;
+      // 安卓兼容性源码修改
+      // var aMat = sAgent.toString().match(/android ([0-9]\.[0-9])/i);
+      var aMat = sAgent.toString().match(/android (([0-9]).?[0-9]?)/i);
 			if (aMat && aMat[1]) {
 				android = parseFloat(aMat[1]);
 			}
@@ -594,9 +595,13 @@ var QRCode;
 	 * 
 	 * @private
 	 */
+
 	QRCode.prototype.makeImage = function () {
-		if (typeof this._oDrawing.makeImage == "function" && (!this._android || this._android >= 3)) {
+		// if (typeof this._oDrawing.makeImage == "function" && (!this._android || this._android >= 3)) {
+		if (typeof this._oDrawing.makeImage == "function") {
 			this._oDrawing.makeImage();
+		} else {
+			alert('你的设备版本过低，不支持二维码绘制，请更换手机后重试')
 		}
 	};
 	
