@@ -21,10 +21,14 @@ var qrcode = new QRCode(document.getElementById("qrcode"), {
 	height: 128,
 	colorDark : "#000000",
 	colorLight : "#ffffff",
+	internalPattern : "#ff0000",
+	externalPattern : "#00ff00",
 	correctLevel : QRCode.CorrectLevel.H
 });
 </script>
 ```
+
+![image](https://user-images.githubusercontent.com/26313003/99075655-9c272580-2598-11eb-9352-22b64bba001c.png)
 
 and you can use some methods
 

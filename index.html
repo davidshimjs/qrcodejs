@@ -13,8 +13,11 @@
 
 <script type="text/javascript">
 var qrcode = new QRCode(document.getElementById("qrcode"), {
-	width : 100,
-	height : 100
+	width : 256,
+	height : 256,
+	internalPattern: "#FF0000",
+	externalPattern: "#FFFF00",
+	correctLevel : QRCode.CorrectLevel.H
 });
 
 function makeCode () {		
