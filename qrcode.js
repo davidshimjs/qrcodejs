@@ -357,6 +357,7 @@ var QRCode;
 			this._elCanvas = document.createElement("canvas");
 			this._elCanvas.width = htOption.width;
 			this._elCanvas.height = htOption.height;
+			el.innerHTML = "";
 			el.appendChild(this._elCanvas);
 			this._el = el;
 			this._oContext = this._elCanvas.getContext("2d");
