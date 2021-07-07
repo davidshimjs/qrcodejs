@@ -74,6 +74,33 @@ var QRCode;
 			}
 		}
 	};
+	
+	function QRNumberByte(data) {
+		this.mode = QRMode.MODE_NUMBER;
+		this.data = data;
+		this.parsedData = [];
+
+		// Added to support UTF-8 Characters
+		for (var i = 0, l = this.data.length; i < l; i += 3) {
+			this.parsedData.push(parseInt(this.data.slice(i, i + 3)));
+		}
+	}
+
+	QRNumberByte.prototype = {
+		getLength: function (buffer) {
+			return this.data.length;
+		},
+		write: function (buffer) {
+			var i = 0;
+			var l = this.parsedData.length - 1;
+			while(i < l){
+				buffer.put(this.parsedData[i], 10);
+				i++;
+			}
+			var d  = this.parsedData[i];
+			buffer.put(d, d > 99 ? 10 : (d > 9 ? 7 : 4));
+		}
+	};
 
 	function QRCodeModel(typeNumber, errorCorrectLevel) {
 		this.typeNumber = typeNumber;
@@ -84,7 +111,7 @@ var QRCode;
 		this.dataList = [];
 	}
 
-	QRCodeModel.prototype={addData:function(data){var newData=new QR8bitByte(data);this.dataList.push(newData);this.dataCache=null;},isDark:function(row,col){if(row<0||this.moduleCount<=row||col<0||this.moduleCount<=col){throw new Error(row+","+col);}
+	QRCodeModel.prototype={addData:function(data){var newData= isNaN(data) ? new QR8bitByte(data) : new QRNumberByte(data);this.dataList.push(newData);this.dataCache=null;},isDark:function(row,col){if(row<0||this.moduleCount<=row||col<0||this.moduleCount<=col){throw new Error(row+","+col);}
 	return this.modules[row][col];},getModuleCount:function(){return this.moduleCount;},make:function(){this.makeImpl(false,this.getBestMaskPattern());},makeImpl:function(test,maskPattern){this.moduleCount=this.typeNumber*4+17;this.modules=new Array(this.moduleCount);for(var row=0;row<this.moduleCount;row++){this.modules[row]=new Array(this.moduleCount);for(var col=0;col<this.moduleCount;col++){this.modules[row][col]=null;}}
 	this.setupPositionProbePattern(0,0);this.setupPositionProbePattern(this.moduleCount-7,0);this.setupPositionProbePattern(0,this.moduleCount-7);this.setupPositionAdjustPattern();this.setupTimingPattern();this.setupTypeInfo(test,maskPattern);if(this.typeNumber>=7){this.setupTypeNumber(test);}
 	if(this.dataCache==null){this.dataCache=QRCodeModel.createData(this.typeNumber,this.errorCorrectLevel,this.dataList);}
@@ -150,7 +177,7 @@ var QRCode;
 	QRBitBuffer.prototype={get:function(index){var bufIndex=Math.floor(index/8);return((this.buffer[bufIndex]>>>(7-index%8))&1)==1;},put:function(num,length){for(var i=0;i<length;i++){this.putBit(((num>>>(length-i-1))&1)==1);}},getLengthInBits:function(){return this.length;},putBit:function(bit){var bufIndex=Math.floor(this.length/8);if(this.buffer.length<=bufIndex){this.buffer.push(0);}
 	if(bit){this.buffer[bufIndex]|=(0x80>>>(this.length%8));}
 	this.length++;}};var QRCodeLimitLength=[[17,14,11,7],[32,26,20,14],[53,42,32,24],[78,62,46,34],[106,84,60,44],[134,106,74,58],[154,122,86,64],[192,152,108,84],[230,180,130,98],[271,213,151,119],[321,251,177,137],[367,287,203,155],[425,331,241,177],[458,362,258,194],[520,412,292,220],[586,450,322,250],[644,504,364,280],[718,560,394,310],[792,624,442,338],[858,666,482,382],[929,711,509,403],[1003,779,565,439],[1091,857,611,461],[1171,911,661,511],[1273,997,715,535],[1367,1059,751,593],[1465,1125,805,625],[1528,1190,868,658],[1628,1264,908,698],[1732,1370,982,742],[1840,1452,1030,790],[1952,1538,1112,842],[2068,1628,1168,898],[2188,1722,1228,958],[2303,1809,1283,983],[2431,1911,1351,1051],[2563,1989,1423,1093],[2699,2099,1499,1139],[2809,2213,1579,1219],[2953,2331,1663,1273]];
-	
+	var QRNCodeLimitLength = [[41,34,27,17],[77,63,48,34],[127,101,77,58],[187,149,111,82],[255,202,144,106],[322,255,178,139],[370,293,207,154],[461,365,259,202],[552,432,312,235],[652,513,364,288],[772,604,427,331],[883,691,489,374],[1022,796,580,427],[1101,871,621,468],[1250,991,703,530],[1408,1082,775,602],[1548,1212,876,674],[1725,1346,948,746],[1903,1500,1063,813],[2061,1600,1159,919],[2232,1708,1224,969],[2409,1872,1358,1056],[2620,2059,1468,1108],[2812,2188,1588,1228],[3057,2395,1718,1286],[3283,2544,1804,1425],[3517,2701,1933,1501],[3669,2857,2085,1581],[3909,3035,2181,1677],[4158,3289,2358,1782],[4417,3486,2473,1897],[4686,3693,2670,2022],[4965,3909,2805,2157],[5253,4134,2949,2301],[5529,4343,3081,2361],[5836,4588,3244,2524],[6153,4775,3417,2625],[6479,5039,3599,2735],[6743,5313,3791,2927],[7089,5596,3993,3057]];
 	function _isSupportCanvas() {
 		return typeof CanvasRenderingContext2D != "undefined";
 	}
@@ -469,22 +496,23 @@ var QRCode;
 	function _getTypeNumber(sText, nCorrectLevel) {			
 		var nType = 1;
 		var length = _getUTF8Length(sText);
+		var limits = isNaN(sText) ? QRCodeLimitLength : QRNCodeLimitLength;
 		
-		for (var i = 0, len = QRCodeLimitLength.length; i <= len; i++) {
+		for (var i = 0, len = limits.length; i <= len; i++) {
 			var nLimit = 0;
 			
 			switch (nCorrectLevel) {
 				case QRErrorCorrectLevel.L :
-					nLimit = QRCodeLimitLength[i][0];
+					nLimit = limits[i][0];
 					break;
 				case QRErrorCorrectLevel.M :
-					nLimit = QRCodeLimitLength[i][1];
+					nLimit = limits[i][1];
 					break;
 				case QRErrorCorrectLevel.Q :
-					nLimit = QRCodeLimitLength[i][2];
+					nLimit = limits[i][2];
 					break;
 				case QRErrorCorrectLevel.H :
-					nLimit = QRCodeLimitLength[i][3];
+					nLimit = limits[i][3];
 					break;
 			}
 			
@@ -495,7 +523,7 @@ var QRCode;
 			}
 		}
 		
-		if (nType > QRCodeLimitLength.length) {
+		if (nType > limits.length) {
 			throw new Error("Too long data");
 		}
 		
@@ -503,6 +531,9 @@ var QRCode;
 	}
 
 	function _getUTF8Length(sText) {
+		if(!isNaN(sText)){
+		   return sText.length;
+		}
 		var replacedText = encodeURI(sText).toString().replace(/\%[0-9a-fA-F]{2}/g, 'a');
 		return replacedText.length + (replacedText.length != sText ? 3 : 0);
 	}
