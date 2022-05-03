@@ -33,7 +33,7 @@ qrcode.clear(); // clear the code.
 qrcode.makeCode("http://naver.com"); // make another code.
 ```
 
-## Language support in languages other than English. Full UTF-8 encoding support (this repo fix)
+## Full UTF-8 encoding support
 
 ```
 qrcode.clear(); // clear the code.
