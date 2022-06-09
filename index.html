@@ -6,39 +6,156 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
 <script type="text/javascript" src="jquery.min.js"></script>
 <script type="text/javascript" src="qrcode.js"></script>
+<script type="text/javascript">
+var count = 0;
+var listqrcode = [];
+var showImputs = true;
+var addCode;
+var removeCode;
+var makeCode;
+var changeVisibility;
+</script>
 </head>
 <body>
-<input id="text" type="text" value="http://jindo.dev.naver.com/collie" style="width:80%" /><br />
-<div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
+<div id="divButtons">
+<button type="button" onclick="makeCode();">Generate</button>
+<button type="button" onclick="addCode();">Add</button>
+<button type="button" onclick="removeCode();">Remove</button>
+<button id="showImputs" type="button" onclick="changeVisibility()">Hide</button>
+<div>
+<div id="divInputs">
+</div>
+<div id="divCodes">
+</div>
 
 <script type="text/javascript">
-var qrcode = new QRCode(document.getElementById("qrcode"), {
-	width : 100,
-	height : 100
-});
 
-function makeCode () {		
-	var elText = document.getElementById("text");
+changeVisibility = function () {
+	if(showImputs)
+	{
+		for (let i = 0; i < count; i++) {
+			document.getElementById("inputTag" + i).style.visibility = "hidden"; 
+			document.getElementById("inputTag" + i).style.height = "0"; 
+			document.getElementById("inputTag" + i).style.padding = "0"; 
+			document.getElementById("inputTag" + i).style.border = "0"; 
+			
+			document.getElementById("inputLink" + i).style.visibility = "hidden"; 
+			document.getElementById("inputLink" + i).style.height = "0"; 
+			document.getElementById("inputLink" + i).style.padding = "0"; 
+			document.getElementById("inputLink" + i).style.border = "0"; 
+			
+			document.getElementById("showImputs").innerHTML = "Show"; 
+			
+			showImputs = false;
+		}
+	}
+	else
+	{
+		for (let i = 0; i < count; i++) {
+			document.getElementById("inputTag" + i).style = "none";
+			document.getElementById("inputTag" + i).style.width = "80%";
+			
+			document.getElementById("inputLink" + i).style = "none";
+			document.getElementById("inputLink" + i).style.width = "80%";
+			
+			document.getElementById("showImputs").innerHTML = "Hide"; 
+			
+			showImputs = true;
+		}
+	}
+}
+
+addCode = function () {
+
+	let inputTag = document.createElement("input");
+	inputTag.setAttribute("id", "inputTag" + count);
+	inputTag.setAttribute("type", "text");
+	inputTag.setAttribute("value", "Product X (nº00000001)");
+	inputTag.style.width = "80%";
+	document.getElementById("divInputs").appendChild(inputTag);
+
+	let inputLink = document.createElement("input");
+	inputLink.setAttribute("id", "inputLink" + count);
+	inputLink.setAttribute("type", "text");
+	inputLink.setAttribute("value", "http://jindo.dev.naver.com/productxn00000001");
+	inputLink.style.width = "80%";
+	document.getElementById("divInputs").appendChild(inputLink);
 	
-	if (!elText.value) {
-		alert("Input a text");
-		elText.focus();
-		return;
+	let auxCount = count;
+	let listCodes = document.getElementById("divCodes");
+	while(auxCount > 0) {
+		listCodes.removeChild(listCodes.lastElementChild);
+		auxCount--;
 	}
 	
-	qrcode.makeCode(elText.value);
+	listqrcode = [];
+
+	for (let i = 0; i <= count; i++) {
+		let divCode = document.createElement("div");
+		divCode.setAttribute("id", "divCode" + i);
+		divCode.style.float = "left";
+		divCode.style.margin = "5px";
+
+		let divTag = document.createElement("div");
+		divTag.setAttribute("id", "divTag" + i);
+		divTag.style.width = "100px";
+		divTag.style.margin = "5px";
+
+		divCode.appendChild(divTag);
+
+		let qrcode = document.createElement("div");
+		qrcode.setAttribute("id", "qrcode" + i);
+		qrcode.style.width = "100px";
+		qrcode.style.height = "100px";
+		qrcode.style.margin = "5px";
+
+		divCode.appendChild(qrcode);
+
+		document.getElementById("divCodes").appendChild(divCode);
+
+		listqrcode.push(new QRCode(document.getElementById("qrcode" + i), {
+			width : 100,
+			height : 100
+		}));
+	}
+	
+	count++;
 }
+
+removeCode = function () {
+	if (count > 1) {
+		let listInputs = document.getElementById("divInputs");
+		listInputs.removeChild(listInputs.lastElementChild);
+		listInputs.removeChild(listInputs.lastElementChild);
+
+		let listCodes = document.getElementById("divCodes");
+		listCodes.removeChild(listCodes.lastElementChild);
+	
+		count--;
+	}
+}
+
+makeCode = function () {	
+	for (let i = 0; i < count; i++) {
+		var elText = document.getElementById("inputLink" + i);
+		var inputtag = document.getElementById("inputTag" + i);
+		var labeltag = document.getElementById("divTag" + i);
+
+		labeltag.innerHTML = inputtag.value;
+	
+		if (!elText.value) {
+			alert("Input a text");
+			elText.focus();
+			return;
+		}
+		
+		listqrcode[i].makeCode(elText.value);
+	}
+}
+
+addCode();
 
 makeCode();
 
-$("#text").
-	on("blur", function () {
-		makeCode();
-	}).
-	on("keydown", function (e) {
-		if (e.keyCode == 13) {
-			makeCode();
-		}
-	});
 </script>
 </body>
