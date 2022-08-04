@@ -33,6 +33,13 @@ qrcode.clear(); // clear the code.
 qrcode.makeCode("http://naver.com"); // make another code.
 ```
 
+## Full UTF-8 encoding support
+
+```
+qrcode.clear(); // clear the code.
+qrcode.makeCode("你好 こんにちは 여보세요"); // make another code.
+```
+
 ## Browser Compatibility
 IE6~10, Chrome, Firefox, Safari, Opera, Mobile Safari, Android, Windows Mobile, ETC.
 
