@@ -21,7 +21,12 @@ var qrcode = new QRCode(document.getElementById("qrcode"), {
 	height: 128,
 	colorDark : "#000000",
 	colorLight : "#ffffff",
-	correctLevel : QRCode.CorrectLevel.H
+	correctLevel : QRCode.CorrectLevel.H,
+    icon:{
+        src:"" //image base64,
+        width:25, // default 20px
+        height:25 // default 20px
+    }
 });
 </script>
 ```

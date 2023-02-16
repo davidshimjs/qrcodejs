@@ -377,13 +377,13 @@ var QRCode;
             var _elImage = this._elImage;
             var _oContext = this._oContext;
             var _htOption = this._htOption;
-            
+            var _canvasWidth = _htOption.width;
+            var _canvasHeight = _htOption.height;
 			var nCount = oQRCode.getModuleCount();
-			var nWidth = _htOption.width / nCount;
-			var nHeight = _htOption.height / nCount;
+			var nWidth = _canvasWidth / nCount;
+			var nHeight = _canvasHeight / nCount;
 			var nRoundedWidth = Math.round(nWidth);
 			var nRoundedHeight = Math.round(nHeight);
-
 			_elImage.style.display = "none";
 			this.clear();
 			
@@ -413,7 +413,21 @@ var QRCode;
 					);
 				}
 			}
-			
+			//draw icon
+			if(_htOption.icon && _htOption.icon.src){
+				var _imageW = parseInt(_htOption.icon.width || 20);
+				var _imageH = parseInt(_htOption.icon.height || 20);
+				var image = new Image();
+				image.src = _htOption.icon.src;
+				image.onload = function(){
+					var _imageX = _canvasWidth / 2 - _imageW / 2;
+					var _imageY = _canvasHeight / 2 - _imageH / 2;
+					var _baseVal = 2;
+					_oContext.fillStyle = "#ffffff";
+					_oContext.fillRect(_imageX - _baseVal, _imageY - _baseVal, _imageW + _baseVal * 2, _imageH + _baseVal * 2);
+					_oContext.drawImage(this, _imageX, _imageY, _imageW, _imageH);
+				};
+			}
 			this._bIsPainted = true;
 		};
 			
