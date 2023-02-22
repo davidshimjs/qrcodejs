@@ -367,7 +367,32 @@ var QRCode;
 			this._el.appendChild(this._elImage);
 			this._bSupportDataURI = null;
 		};
-			
+		/**
+		 * Draw a Icon on QRCode
+		 *
+		 * @param {QRCode} oQRCode
+		 */
+		Drawing.prototype.drawIcon = function (oQRCode) {
+			var _htOption = this._htOption;
+			var _oContext = this._oContext;
+			var _canvasWidth = _htOption.width;
+			var _canvasHeight = _htOption.height;
+			//draw icon
+			if(_htOption.icon && _htOption.icon.src){
+				var _imageW = parseInt(_htOption.icon.width || 20);
+				var _imageH = parseInt(_htOption.icon.height || 20);
+				var image = new Image();
+				image.src = _htOption.icon.src;
+				image.onload = function(){
+					var _imageX = _canvasWidth / 2 - _imageW / 2;
+					var _imageY = _canvasHeight / 2 - _imageH / 2;
+					var _baseVal = 2;
+					_oContext.fillStyle = "#ffffff";
+					_oContext.fillRect(_imageX - _baseVal, _imageY - _baseVal, _imageW + _baseVal * 2, _imageH + _baseVal * 2);
+					_oContext.drawImage(this, _imageX, _imageY, _imageW, _imageH);
+				};
+			}
+		};
 		/**
 		 * Draw the QRCode
 		 * 
@@ -377,13 +402,13 @@ var QRCode;
             var _elImage = this._elImage;
             var _oContext = this._oContext;
             var _htOption = this._htOption;
-            
+            var _canvasWidth = _htOption.width;
+            var _canvasHeight = _htOption.height;
 			var nCount = oQRCode.getModuleCount();
-			var nWidth = _htOption.width / nCount;
-			var nHeight = _htOption.height / nCount;
+			var nWidth = _canvasWidth / nCount;
+			var nHeight = _canvasHeight / nCount;
 			var nRoundedWidth = Math.round(nWidth);
 			var nRoundedHeight = Math.round(nHeight);
-
 			_elImage.style.display = "none";
 			this.clear();
 			
@@ -413,8 +438,6 @@ var QRCode;
 					);
 				}
 			}
-			
-			this._bIsPainted = true;
 		};
 			
 		/**
@@ -583,8 +606,16 @@ var QRCode;
 		this._oQRCode.addData(sText);
 		this._oQRCode.make();
 		this._el.title = sText;
-		this._oDrawing.draw(this._oQRCode);			
-		this.makeImage();
+		var that = this;
+		var pro = new Promise(function(resolve, reject){
+			that._oDrawing.draw(that._oQRCode);
+			that._oDrawing.drawIcon(that._oQRCode);
+			resolve();
+		});
+		pro.then(function(){
+			that._bIsPainted = true;
+			that.makeImage();
+		})
 	};
 	
 	/**
