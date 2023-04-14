@@ -4,7 +4,6 @@
 <title>Cross-Browser QRCode generator for Javascript</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
-<script type="text/javascript" src="jquery.min.js"></script>
 <script type="text/javascript" src="qrcode.js"></script>
 </head>
 <body>
@@ -31,14 +30,14 @@ function makeCode () {
 
 makeCode();
 
-$("#text").
-	on("blur", function () {
+document.getElementById("text").addEventListener("blur", function () {
+	makeCode();
+});
+
+document.getElementById("text").addEventListener("keydown", function (e) {
+	if (e.keyCode == 13) {
 		makeCode();
-	}).
-	on("keydown", function (e) {
-		if (e.keyCode == 13) {
-			makeCode();
-		}
-	});
+	}
+});
 </script>
 </body>
