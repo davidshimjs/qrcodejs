@@ -470,7 +470,7 @@ var QRCode;
 		var nType = 1;
 		var length = _getUTF8Length(sText);
 		
-		for (var i = 0, len = QRCodeLimitLength.length; i <= len; i++) {
+		for (var i = 0, len = QRCodeLimitLength.length; i < len; i++) {
 			var nLimit = 0;
 			
 			switch (nCorrectLevel) {
