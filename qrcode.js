@@ -440,6 +440,7 @@ var QRCode;
 		 */
 		Drawing.prototype.clear = function () {
 			this._oContext.clearRect(0, 0, this._elCanvas.width, this._elCanvas.height);
+			this._el.removeChild(this._elImage);
 			this._bIsPainted = false;
 		};
 		
