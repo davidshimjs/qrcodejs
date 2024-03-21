@@ -42,5 +42,8 @@ MIT License
 ## Contact
 twitter @davidshimjs
 
+## Futher Guidance
+For futher guidance on how to use this library visit https://developerflow.github.io/qrcodejs
+
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/davidshimjs/qrcodejs/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
